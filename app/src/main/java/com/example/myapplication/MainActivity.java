@@ -76,6 +76,24 @@ public class MainActivity extends LoggingActivity {
             }
         });
 
+        Button prevButton = findViewById(R.id.prev_button);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCurrentIndex == 0){
+                    mCurrentIndex = QUESTION_BANK.length -1;
+                    final Question currentQuestion = QUESTION_BANK[mCurrentIndex];
+                    questionString.setText(currentQuestion.getQuestionResId());
+                }else {
+                mCurrentIndex = (mCurrentIndex - 1) % QUESTION_BANK.length;
+
+                final Question currentQuestion = QUESTION_BANK[mCurrentIndex];
+                questionString.setText(currentQuestion.getQuestionResId());
+
+                isCheater = false;}
+            }
+        });
+
         Button cheatButton = findViewById(R.id.cheat_button);
         cheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
