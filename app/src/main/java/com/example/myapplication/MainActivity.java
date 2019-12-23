@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends LoggingActivity {
 
     private static final int REQUEST_CODE_CHEAT = 1;
@@ -33,6 +36,11 @@ public class MainActivity extends LoggingActivity {
     private int mCurrentIndex = 0;
 
     private boolean isCheater;
+    private int countTrue;
+    private int countAnswer = 0;
+    private Map result = new HashMap();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +112,33 @@ public class MainActivity extends LoggingActivity {
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
+        Button checkButton = findViewById(R.id.check_button);
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String toastResult = String.format("Отвечено %d/%d вопросов\n Правильных ответов: %d",
+                        countAnswer, QUESTION_BANK.length, countTrue);
+
+                Toast toast = Toast.makeText(MainActivity.this, toastResult, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 
+    public  void clickOnAnswer(Question currentQuestion ){
+        if(result.containsKey(currentQuestion)){
+
+        }else{
+            result.put(currentQuestion,1);
+            countAnswer++;
+            if(!currentQuestion.isCorrectAnswer()){
+                countTrue++;
+            }
+        }
+
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_CODE_CHEAT) {
@@ -124,9 +157,10 @@ public class MainActivity extends LoggingActivity {
     }
 
     private void onButtonClicked(boolean answer) {
+
         Question currentQuestion = QUESTION_BANK[mCurrentIndex];
         int toastMessage;
-
+        clickOnAnswer(currentQuestion);
         if (isCheater) {
             toastMessage = R.string.judgment_toast;
         } else {
